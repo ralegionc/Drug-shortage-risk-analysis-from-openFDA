@@ -1,0 +1,885 @@
+<title>What puts a drug into shortage</title>
+
+<style>
+:root {
+  color-scheme: light;
+  --ground:   #eef2f2;
+  --surface:  #fcfcfb;
+  --ink:      #101a20;
+  --ink-2:    #4a5a63;
+  --muted:    #83908f;
+  --accent:   #2a78d6;
+  --accent-w: #86b6ef;
+  --accent-d: #1c5cab;
+  --caution:  #a8511c;
+  --rule:     #dde3e2;
+  --hair:     rgba(16,26,32,0.10);
+  --chip-bg:  rgba(42,120,214,0.10);
+  --caut-bg:  rgba(168,81,28,0.10);
+  --shadow:   0 1px 2px rgba(16,26,32,0.05), 0 8px 24px -16px rgba(16,26,32,0.30);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground:   #0e1113;
+    --surface:  #1a1a19;
+    --ink:      #ffffff;
+    --ink-2:    #c3c2b7;
+    --muted:    #898781;
+    --accent:   #3987e5;
+    --accent-w: #6da7ec;
+    --accent-d: #1c5cab;
+    --caution:  #d98a4f;
+    --rule:     #2c2c2a;
+    --hair:     rgba(255,255,255,0.10);
+    --chip-bg:  rgba(57,135,229,0.16);
+    --caut-bg:  rgba(217,138,79,0.14);
+    --shadow:   0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -16px rgba(0,0,0,0.8);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground:   #0e1113;
+  --surface:  #1a1a19;
+  --ink:      #ffffff;
+  --ink-2:    #c3c2b7;
+  --muted:    #898781;
+  --accent:   #3987e5;
+  --accent-w: #6da7ec;
+  --accent-d: #1c5cab;
+  --caution:  #d98a4f;
+  --rule:     #2c2c2a;
+  --hair:     rgba(255,255,255,0.10);
+  --chip-bg:  rgba(57,135,229,0.16);
+  --caut-bg:  rgba(217,138,79,0.14);
+  --shadow:   0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -16px rgba(0,0,0,0.8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: Georgia, "Charter", Cambria, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sans { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.mono, code, table, .num {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px 96px; }
+.col  { max-width: 660px; }
+
+/* ---------- masthead ---------- */
+header.top {
+  padding: 72px 0 32px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 8px;
+}
+.eyebrow {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+h1 {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 680;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  margin: 0 0 20px;
+  max-width: 17ch;
+}
+.standfirst {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 28px;
+}
+.meta {
+  display: flex; flex-wrap: wrap; gap: 8px 28px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px; color: var(--muted);
+  padding-bottom: 26px;
+}
+.meta b { color: var(--ink-2); font-weight: 500; }
+
+/* ---------- verdict strip ---------- */
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 36px 0 56px;
+}
+.v-cell { background: var(--surface); padding: 20px 20px 22px; }
+.v-claim {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14.5px; font-weight: 600; line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px; color: var(--ink);
+}
+.v-note { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); margin: 10px 0 0; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 2px; font-weight: 600;
+}
+.chip::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor; flex: none;
+}
+.chip.yes  { color: var(--accent);  background: var(--chip-bg); }
+.chip.part { color: var(--caution); background: var(--caut-bg); }
+.chip.no   { color: var(--caution); background: var(--caut-bg); }
+.chip.no::before { border-radius: 0; transform: rotate(45deg); }
+.chip.part::before { border-radius: 0; }
+
+/* ---------- sections ---------- */
+section { margin: 0 0 60px; }
+h2 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 650; font-size: 25px; letter-spacing: -0.02em;
+  line-height: 1.2; text-wrap: balance;
+  margin: 0 0 6px; padding-top: 8px;
+}
+h3 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 620; font-size: 17.5px; letter-spacing: -0.012em;
+  margin: 34px 0 8px;
+}
+.sec-rule { border: 0; border-top: 1px solid var(--ink); margin: 0 0 22px; opacity: .85; }
+p { margin: 0 0 17px; }
+.col p { max-width: 66ch; }
+strong { font-weight: 700; }
+em.term { font-style: normal; font-family: ui-monospace, Consolas, monospace; font-size: 0.88em; color: var(--ink-2); }
+
+ul.tight { margin: 0 0 18px; padding-left: 20px; max-width: 66ch; }
+ul.tight li { margin-bottom: 9px; }
+
+/* ---------- callout ---------- */
+.callout {
+  border-left: 3px solid var(--caution);
+  background: var(--caut-bg);
+  padding: 16px 20px;
+  margin: 26px 0;
+  max-width: 66ch;
+}
+.callout p { margin: 0; font-size: 16px; }
+.callout .lab {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--caution); font-weight: 700; display: block; margin-bottom: 6px;
+}
+
+/* ---------- figures ---------- */
+figure {
+  margin: 34px 0 30px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow);
+}
+.fig-head { padding: 18px 22px 0; }
+.fig-title {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 620; font-size: 15.5px; letter-spacing: -0.01em;
+  margin: 0 0 4px; color: var(--ink);
+}
+.fig-sub { font-size: 13.5px; color: var(--ink-2); margin: 0; line-height: 1.45; max-width: 76ch; }
+.fig-body { padding: 6px 12px 4px; overflow-x: auto; }
+.fig-body svg { display: block; min-width: 460px; width: 100%; height: auto; }
+figcaption {
+  padding: 12px 22px 18px;
+  font-size: 13px; color: var(--muted); line-height: 1.5;
+  border-top: 1px solid var(--rule); margin-top: 6px;
+}
+details.data { padding: 0 22px 16px; }
+details.data summary {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-2); cursor: pointer; padding: 6px 0;
+}
+details.data summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+table { border-collapse: collapse; font-size: 12.5px; width: 100%; margin-top: 6px; }
+th, td { text-align: right; padding: 5px 10px; border-bottom: 1px solid var(--rule); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* svg text roles */
+.ax-label { font-family: ui-monospace, Consolas, monospace; font-size: 11px; fill: var(--muted); }
+.mark-label { font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; fill: var(--ink-2); font-weight: 600; }
+.cat-label { font-family: system-ui, sans-serif; font-size: 12.5px; fill: var(--ink); }
+.grid-line { stroke: var(--rule); stroke-width: 1; }
+.axis-line { stroke: var(--muted); stroke-width: 1; opacity: .5; }
+.ref-line  { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+
+/* tooltip */
+#tip {
+  position: fixed; pointer-events: none; z-index: 50;
+  background: var(--ink); color: var(--ground);
+  font-family: ui-monospace, Consolas, monospace; font-size: 11.5px;
+  line-height: 1.5; padding: 7px 10px; border-radius: 3px;
+  opacity: 0; transition: opacity .12s; max-width: 260px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.28);
+}
+#tip.on { opacity: 1; }
+.hit { cursor: crosshair; }
+.hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---------- method table ---------- */
+.method { border: 1px solid var(--rule); background: var(--surface); margin: 26px 0; overflow-x: auto; }
+.method table { font-size: 13px; }
+.method th, .method td { padding: 9px 14px; text-align: left; }
+.method td:last-child { text-align: left; }
+.method tr:last-child td { border-bottom: 0; }
+
+footer {
+  border-top: 1px solid var(--rule); margin-top: 20px; padding-top: 22px;
+  font-size: 13.5px; color: var(--muted); max-width: 66ch;
+}
+footer code { font-size: 12.5px; color: var(--ink-2); }
+a { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  header.top { padding-top: 44px; }
+  .wrap { padding: 0 16px 64px; }
+}
+</style>
+
+<div id="tip" role="status" aria-live="polite"></div>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">openFDA · drug shortages × drugs@fda × ndc directory</p>
+  <h1>What puts a drug into shortage</h1>
+  <p class="standfirst">
+    Everyone says shortages concentrate in cheap generic sterile injectables.
+    Measured against the full universe of 2,149 marketed drug markets, the
+    <em>sterile injectable</em> half of that sentence is emphatic and survives every control.
+    The <em>cheap generic</em> half does not survive at all.
+  </p>
+  <div class="meta">
+    <span><b>Snapshot</b> 2026-08-22</span>
+    <span><b>Markets</b> 2,149</span>
+    <span><b>In shortage</b> 62</span>
+    <span><b>Sources</b> 3 openFDA bulk endpoints</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <div class="v-cell">
+    <span class="chip yes">Identified</span>
+    <p class="v-claim" style="margin-top:12px">Sterile injectables carry ~10× the shortage odds</p>
+    <p class="v-note">OR 9.88 (95% CI 4.69–20.78). Holds under every specification, influence trimming, and penalisation.</p>
+  </div>
+  <div class="v-cell">
+    <span class="chip part">Partly identified</span>
+    <p class="v-claim" style="margin-top:12px">Supplier concentration raises risk — with one caveat</p>
+    <p class="v-note">OR 2.45 per doubling of market carried per supplier, but only when market size is measured from current listings.</p>
+  </div>
+  <div class="v-cell">
+    <span class="chip no">Not supported</span>
+    <p class="v-claim" style="margin-top:12px">"Cheap generic" adds nothing measurable</p>
+    <p class="v-note">No generic proxy reaches significance. openFDA carries no price field, so "cheap" is unobservable outright.</p>
+  </div>
+  <div class="v-cell">
+    <span class="chip no">Not identified</span>
+    <p class="v-claim" style="margin-top:12px">The manufacturer-exit experiment cannot be run</p>
+    <p class="v-note">All 440 dated exits fall in the last 18 months. Median follow-up 0.5 y; only 3 have a full year.</p>
+  </div>
+</div>
+
+<section class="col">
+  <h2>The data does not contain what it appears to contain</h2>
+  <hr class="sec-rule">
+  <p>
+    The risk flagged at the outset was real, and it is worse than "current-state-heavy."
+    The shortages endpoint returns 1,628 records. Exactly <strong>10 carry status
+    <em class="term">Resolved</em></strong>, and eight of those are duplicate presentations of a single
+    hydrocortisone entry. Resolution is, for practical purposes, unobservable.
+  </p>
+  <p>
+    This makes the file a <strong>prevalent cohort</strong>: it samples shortages that are
+    in progress, not shortages that occurred. A shortage that began in 2019 and ended in
+    2020 leaves no trace whatsoever. The consequence shows up plainly in the onset series —
+    the 2024 trough is not a quiet year, it is the year whose shortages have mostly already
+    resolved and been purged.
+  </p>
+</section>
+
+<figure>
+  <div class="fig-head">
+    <p class="fig-title">Onsets of shortages still active at the snapshot, by year</p>
+    <p class="fig-sub">Counts of presentation-level records with status <em class="term">Current</em>. This is not an incidence series — recent years are depressed by nothing having resolved yet, and older years by everything short having already vanished.</p>
+  </div>
+  <div class="fig-body"><svg id="c-onsets" role="img" aria-label="Column chart of shortage onsets by year, showing a spike in 2023 and a trough in 2024"></svg></div>
+  <figcaption>The 2012 bar is a database backfill artefact, not a wave of onsets.</figcaption>
+  <details class="data"><summary>Show data</summary><div id="t-onsets"></div></details>
+</figure>
+
+<section class="col">
+  <p>
+    Two further gaps close off the designs one would reach for first. The NDC directory
+    carries <strong>zero past marketing-end dates</strong> — delisted products are purged, so
+    market exits cannot be dated from it. And <em class="term">drugsfda</em> retains 23,496
+    discontinued products but attaches <strong>no date</strong> to discontinuation.
+  </p>
+  <p>
+    I tested the obvious workaround — using a firm's last approved submission as a proxy for
+    when it went dormant — against the 294 discontinuations that do carry a true date. It
+    leads the real date 90% of the time, but with a median lead of 3.0 years and an
+    interquartile range of 1.3 to 5.3. That is far too coarse to date an annual event study,
+    so I did not build on it.
+  </p>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Sterile injectables, unambiguously</h2>
+    <hr class="sec-rule">
+    <p>
+      Restricting to markets that are genuinely marketed — at least one non-discontinued
+      approval <em>and</em> at least one active NDC listing — 62 of 2,149 markets are in an
+      active shortage. The form-class gradient needs no model.
+    </p>
+  </div>
+</section>
+
+<figure>
+  <div class="fig-head">
+    <p class="fig-title">Share of marketed drug markets currently in shortage</p>
+    <p class="fig-sub">A market is an active-ingredient set crossed with a dosage-form class — the level at which substitution actually happens.</p>
+  </div>
+  <div class="fig-body"><svg id="c-form" role="img" aria-label="Bar chart of shortage rate by dosage form; injectables highest at 7.59 percent"></svg></div>
+  <figcaption>Injectables are 29% of the universe but 76% of the shortages.</figcaption>
+  <details class="data"><summary>Show data</summary><div id="t-form"></div></details>
+</figure>
+
+<section class="col">
+  <p>
+    Conditional on supplier count, market size, age and generic status, the injectable odds
+    ratio is <strong>9.88 (4.69–20.78)</strong> — an average marginal effect of
+    <strong>+6.8 percentage points</strong> on a 2.9% base rate. It is the most robust number
+    in this analysis: it barely moves across specifications, it strengthens when the ten
+    highest-influence markets are dropped, and L2 penalisation leaves it intact.
+  </p>
+</section>
+
+<section>
+  <div class="col">
+    <h2>The supplier-count coefficient flips sign, and that is the finding</h2>
+    <hr class="sec-rule">
+    <p>
+      Raw, the folk story runs backwards. Markets with <em>more</em> suppliers are more likely
+      to be in shortage — for injectables, 0.8% at a single supplier against 15.7% at nine or
+      more. Taken at face value this refutes the concentration hypothesis outright.
+    </p>
+    <p>
+      It doesn't. Supplier count proxies for market size, which openFDA never reports directly:
+      big, widely used drugs attract many suppliers and are also more visible, more demanded,
+      and more likely to be reported short. Once the number of active listings enters as a size
+      control, the coefficient inverts.
+    </p>
+  </div>
+</section>
+
+<figure>
+  <div class="fig-head">
+    <p class="fig-title">Odds ratio on log supplier count, as controls are added</p>
+    <p class="fig-sub">Each row is the same coefficient from a progressively richer logit. Left of the dashed line means more suppliers reduce shortage odds.</p>
+  </div>
+  <div class="fig-body"><svg id="c-flip" role="img" aria-label="Dot and interval plot showing the supplier count odds ratio moving from 1.90 to 0.41 as controls are added"></svg></div>
+  <figcaption>The move happens entirely at the second step, when market size enters.</figcaption>
+  <details class="data"><summary>Show data</summary><div id="t-flip"></div></details>
+</figure>
+
+<section class="col">
+  <p>
+    Because the two supplier terms correlate at 0.94, the flip invites a collinearity objection.
+    It survives one: the model can be rewritten with no loss of fit as market size plus
+    <strong>listings per supplier</strong> — how much of the market each supplier carries. That
+    is a concentration measure, it correlates with size at only 0.68, and it gives
+    <strong>OR 2.45 (1.40–4.30)</strong> per doubling. Same likelihood to four decimals, no
+    rival regressors.
+  </p>
+
+  <div class="callout">
+    <span class="lab">Where this result is fragile</span>
+    <p>
+      The concentration effect depends on measuring market size from <em>current</em> NDC listings,
+      which a shortage could itself have shrunk. Rebuilt purely from pre-determined approval-file
+      quantities — products ever approved per sponsor — the same concentration measure gives
+      OR 1.20 (0.72–2.00), p = 0.47. I judge current listings the better proxy for today's demand,
+      since approvals-ever counts decades-dead products. But the finding rests on that judgement,
+      and a reader who disagrees should treat concentration as unresolved.
+    </p>
+  </div>
+</section>
+
+<figure>
+  <div class="fig-head">
+    <p class="fig-title">Full model, and the concentration result under both size measures</p>
+    <p class="fig-sub">Logit on 2,149 markets, 62 events, HC1 standard errors, drug-class fixed effects. Bars are 95% confidence intervals on a log scale.</p>
+  </div>
+  <div class="fig-body"><svg id="c-forest" role="img" aria-label="Forest plot of odds ratios for the full model"></svg></div>
+  <figcaption>Generic-only status is the one term that sits squarely on the null.</figcaption>
+  <details class="data"><summary>Show data</summary><div id="t-forest"></div></details>
+</figure>
+
+<section class="col">
+  <h3>The "cheap generic" half of the claim</h3>
+  <p>
+    No generic proxy available in openFDA reaches significance once injectable status, supplier
+    count, size and age are controlled: generic-only markets OR 0.83 (p = 0.55), any generic
+    present OR 2.49 (p = 0.17), log ANDA sponsor count OR 1.05 (p = 0.82). The middle estimate is
+    large but far too imprecise to lean on.
+  </p>
+  <p>
+    The honest statement is stronger than "not significant": <strong>price is not in these data at
+    all.</strong> openFDA has no price, volume, or revenue field. "Cheap" is untestable here, and
+    the generic-status proxies that do exist are silent. Age is doing some of the work that
+    "cheap" is usually invoked for — each doubling of years since first approval carries
+    OR 2.69 (1.54–4.71).
+  </p>
+</section>
+
+<section>
+  <div class="col">
+    <h2>Duration: the naive number is wrong by a factor of two</h2>
+    <hr class="sec-rule">
+    <p>
+      All 62 active shortages are right-censored — none is observed to end. Their mean elapsed
+      time is 5.64 years, and that number will be quoted. It is badly biased upward, because a
+      snapshot of in-progress spells over-samples long ones in proportion to their length.
+    </p>
+    <p>
+      Under a stationary onset intensity, the observed elapsed times are backward recurrence
+      times, whose density is <em class="term">S(a)/E[T]</em>. That relation inverts:
+      <em class="term">E[T] = 1 / E[1/A]</em>. Applying it gives a corrected mean of
+      <strong>2.55 years</strong> and a corrected median of <strong>1.57 years</strong>.
+    </p>
+  </div>
+</section>
+
+<figure>
+  <div class="fig-head">
+    <p class="fig-title">Elapsed time in shortage, naive versus length-bias corrected</p>
+    <p class="fig-sub">62 ongoing spells. Kaplan–Meier is degenerate here — zero spells are observed to end, so it returns S(t)=1 throughout and cannot help.</p>
+  </div>
+  <div class="fig-body"><svg id="c-dur" role="img" aria-label="Dumbbell chart comparing naive and length-bias-corrected mean and median shortage duration"></svg></div>
+  <figcaption>Injectable spells run longest: median elapsed 6.37 y against 3.59 y for oral solids.</figcaption>
+  <details class="data"><summary>Show data</summary><div id="t-dur"></div></details>
+</figure>
+
+<section class="col">
+  <p>
+    The correction assumes onset intensity is roughly stationary — which the onset series above
+    gives reason to doubt. Treat 2.55 years as a lower-bound-flavoured counterweight to the
+    naive 5.64, not as a point estimate. The gap between them is the honest measure of how much
+    the prevalent-cohort problem matters: <strong>a factor of 2.2</strong>.
+  </p>
+</section>
+
+<section>
+  <div class="col">
+    <h2>The exit experiment cannot be run on this snapshot</h2>
+    <hr class="sec-rule">
+    <p>
+      This was the most interesting question asked, and the answer is that the data will not
+      support it yet. There are 440 dated discontinuation notices. Every one of them falls
+      between April 2023 and August 2026, and 437 fall in 2025–2026 — because notices are purged
+      once effective, exactly as resolved shortages are.
+    </p>
+    <p>
+      Median follow-up after a notice is <strong>0.5 years</strong>; only <strong>3 of 440</strong>
+      have a full year. There is no post-period in which to observe a subsequent shortage onset,
+      and only 13 markets pair an exit with a later shortage from a different firm. An event study
+      on 13 markets with six months of follow-up would be theatre.
+    </p>
+    <p>
+      What can be said is cross-sectional and directionally ambiguous. Markets with a
+      discontinuation notice are in shortage 9.7% of the time against 2.4% without — a raw ratio
+      of 4.1×. Conditional on the same controls, that falls to <strong>OR 1.69 (0.80–3.55),
+      p = 0.17</strong>. Causality runs both ways by construction: FDA codes
+      <strong>16.9%</strong> of active shortages as caused by discontinuation of manufacture, so
+      for roughly one shortage in six the exit and the shortage are the same event, not cause and
+      effect.
+    </p>
+
+    <div class="callout">
+      <span class="lab">What would make it identifiable</span>
+      <p>
+        Periodic snapshots — the fix the brief anticipated. <code>src/snapshot.py</code> ships in this
+        repo and appends a dated capture of the endpoint; an NDC present at <em class="term">t</em> and
+        absent at <em class="term">t+1</em> is an observed resolution with a date attached. After
+        roughly twelve monthly runs the duration model can be re-estimated without the stationarity
+        assumption, and exits acquire a real post-period. The first capture is already written to
+        <code>data/snapshots/</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>What the FDA says is going wrong</h2>
+    <hr class="sec-rule">
+    <p>
+      Reason codes are populated for a minority of records and the largest single category is
+      <em class="term">Other</em>, so this is context rather than evidence. It is still worth noting
+      that manufacturing-quality problems — the mechanism most often invoked in the sterile
+      injectable story — are coded for under 5% of active shortages, while demand increases account
+      for 23.8%.
+    </p>
+  </div>
+</section>
+
+<figure>
+  <div class="fig-head">
+    <p class="fig-title">FDA-coded reasons for currently active shortages</p>
+    <p class="fig-sub">Share of the 421 active shortage records that carry a reason code.</p>
+  </div>
+  <div class="fig-body"><svg id="c-reason" role="img" aria-label="Bar chart of FDA-coded shortage reasons"></svg></div>
+  <figcaption>Reason codes are missing for roughly two-thirds of records; read as indicative only.</figcaption>
+  <details class="data"><summary>Show data</summary><div id="t-reason"></div></details>
+</figure>
+
+<section class="col">
+  <h2>Method</h2>
+  <hr class="sec-rule">
+  <div class="method">
+    <table>
+      <tr><th style="width:26%">Element</th><th>Definition</th></tr>
+      <tr><td>Market</td><td>Normalised active-ingredient set × dosage-form class (7 classes, route-aware). 4,111 total; 2,149 marketed.</td></tr>
+      <tr><td>Marketed</td><td>≥1 non-discontinued drugsfda product <em>and</em> ≥1 active NDC listing.</td></tr>
+      <tr><td>Outcome</td><td>≥1 shortage record with status <em class="term">Current</em> at the 2026-08-22 snapshot.</td></tr>
+      <tr><td>Linkage</td><td>Ingredient+form exact match, falling back to openFDA application number, then unique-form match. 97.6% of records linked.</td></tr>
+      <tr><td>Supplier count</td><td>Distinct normalised labelers with an active NDC listing in the market.</td></tr>
+      <tr><td>Market size</td><td>Active NDC listings in the market. Robustness uses products-ever-approved instead.</td></tr>
+      <tr><td>Models</td><td>Logit with HC1 errors; complementary log-log discrete-time hazard with year effects and market-clustered errors.</td></tr>
+      <tr><td>Not used</td><td>Kaplan–Meier (degenerate), last-submission exit proxy (median 3.0 y error), event study on exits (no post-period).</td></tr>
+    </table>
+  </div>
+  <p>
+    The discrete-time hazard is reported in the repository output but not headlined here, because
+    its estimand is compromised by the same prevalent-cohort problem: it models onset of shortages
+    <em>that persist to the snapshot</em>, which entangles onset with duration. Symptomatically, the
+    injectable hazard ratio falls from 10.75 over 2012–2026 to 3.99 when restricted to 2022–2026,
+    where survival filtering is weaker — most of the long-window injectable effect is injectable
+    shortages lasting longer, not starting more often.
+  </p>
+</section>
+
+<footer>
+  <p>
+    Built from three unauthenticated openFDA bulk endpoints captured 2026-08-22:
+    <code>/drug/shortages</code> (1,628 records), <code>/drug/drugsfda</code> (29,277 applications,
+    51,660 products), <code>/drug/ndc</code> (137,198 listings). Pipeline:
+    <code>build_universe.py</code> → <code>build_panel.py</code> → <code>analysis.py</code> →
+    <code>robustness.py</code>, with <code>snapshot.py</code> for ongoing capture. No imputed or
+    synthetic inputs; 39 unlinked shortage records (2.4%, mostly parenteral-nutrition amino-acid
+    combinations) are excluded rather than assigned.
+  </p>
+</footer>
+
+</div>
+
+<script type="application/json" id="figdata">
+{"by_form":[{"form":"Injectable","n":619,"k":47,"rate":7.59},{"form":"Inhalation","n":81,"k":2,"rate":2.47},{"form":"Oral Liquid","n":103,"k":2,"rate":1.94},{"form":"Oral Solid","n":984,"k":9,"rate":0.91},{"form":"Other Liquid","n":125,"k":1,"rate":0.8},{"form":"Topical","n":150,"k":1,"rate":0.67},{"form":"Ophthalmic","n":84,"k":0,"rate":0.0}],"sign_flip":[{"or":1.8956529858055813,"lo":1.513107744684577,"hi":2.3749136538473783,"p":2.676578778378557e-08,"spec":"no controls"},{"or":0.5892218345626685,"lo":0.37954336506144615,"hi":0.9147370295069964,"p":0.01841879622771577,"spec":"+ market size"},{"or":0.4031067568830003,"lo":0.22939252725288017,"hi":0.7083711897275419,"p":0.0015851058899231895,"spec":"+ age"},{"or":0.4079828991204953,"lo":0.23266747318547343,"hi":0.7153988638630066,"p":0.0017553704663384516,"spec":"+ generic"},{"or":0.41045106949505533,"lo":0.2346494778979088,"hi":0.7179648638422824,"p":0.0018002520940532485,"spec":"+ drug-class FE"}],"forest":[{"term":"Sterile injectable","or":9.876743465959139,"lo":4.6934739358939845,"hi":20.784191587033032,"p":1.6085692542386289e-09},{"term":"Supplier count (log)","or":0.41045106949505533,"lo":0.2346494778979088,"hi":0.7179648638422824,"p":0.0018002520940532485},{"term":"Market size, listings (log)","or":3.115286178802546,"lo":1.9760307020310925,"hi":4.911364973156911,"p":9.96396456066174e-07},{"term":"Years since first approval (log)","or":2.688380409972588,"lo":1.5351334452019305,"hi":4.707987602845623,"p":0.0005417101478334114},{"term":"Generic-only market","or":0.8338598402515824,"lo":0.4550168565477547,"hi":1.5281241193125323,"p":0.5566032078840769}],"n_markets":2149,"n_events":62,"concentration":[{"label":"Current listings per supplier","or":2.45108312665981,"lo":1.397821621633837,"hi":4.297979370768519,"p":0.0017553704663386676},{"label":"Products ever approved per sponsor","or":1.2040989779372235,"lo":0.7239733823312142,"hi":2.002634881410827,"p":0.47426461502638884}],"duration":{"n":62,"naive_mean":5.64,"naive_median":4.61,"corr_mean":2.55,"corr_median":1.57,"by_form":[{"form":"Injectable","n":47,"median":6.37},{"form":"Oral Solid","n":9,"median":3.59}],"hist":[7,19,12,6,13,5]},"onsets":[{"year":2012,"n":80},{"year":2013,"n":0},{"year":2014,"n":0},{"year":2015,"n":6},{"year":2016,"n":27},{"year":2017,"n":104},{"year":2018,"n":181},{"year":2019,"n":20},{"year":2020,"n":143},{"year":2021,"n":52},{"year":2022,"n":172},{"year":2023,"n":352},{"year":2024,"n":11},{"year":2025,"n":17},{"year":2026,"n":12}],"resolved_records":10,"total_records":1628,"reasons":[{"reason":"Other","pct":33.7},{"reason":"Demand increase","pct":23.8},{"reason":"Discontinuation of manufacture","pct":16.9},{"reason":"Active ingredient shortage","pct":13.5},{"reason":"Shipping delay","pct":5.7},{"reason":"GMP compliance","pct":4.8},{"reason":"Inactive ingredient shortage","pct":1.0},{"reason":"Regulatory delay","pct":0.7}]}
+</script>
+
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("figdata").textContent);
+  var NS = "http://www.w3.org/2000/svg";
+  var tip = document.getElementById("tip");
+
+  function el(name, attrs, text) {
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function bind(node, html) {
+    node.classList.add("hit");
+    node.setAttribute("tabindex", "0");
+    function show(e) {
+      tip.innerHTML = html;
+      tip.classList.add("on");
+      var r = node.getBoundingClientRect();
+      var x = (e && e.clientX != null) ? e.clientX : r.left + r.width / 2;
+      var y = (e && e.clientY != null) ? e.clientY : r.top;
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      tip.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, x - w / 2)) + "px";
+      tip.style.top = Math.max(8, y - h - 12) + "px";
+    }
+    function hide() { tip.classList.remove("on"); }
+    node.addEventListener("mouseenter", show);
+    node.addEventListener("mousemove", show);
+    node.addEventListener("mouseleave", hide);
+    node.addEventListener("focus", show);
+    node.addEventListener("blur", hide);
+  }
+  function table(id, cols, rows) {
+    var h = "<table><tr>" + cols.map(function (c) { return "<th>" + c + "</th>"; }).join("") + "</tr>";
+    rows.forEach(function (r) {
+      h += "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>";
+    });
+    document.getElementById(id).innerHTML = h + "</table>";
+  }
+  function svg(id, w, h) {
+    var s = document.getElementById(id);
+    s.setAttribute("viewBox", "0 0 " + w + " " + h);
+    s.setAttribute("preserveAspectRatio", "xMinYMin meet");
+    return s;
+  }
+  function rounded(x, y, w, h, r) {
+    // rounded only on the data end (right), anchored square to the baseline
+    r = Math.min(r, w, h / 2);
+    if (w <= 0.5) return "M" + x + "," + y + "h0.5v" + h + "h-0.5Z";
+    return "M" + x + "," + y + "h" + (w - r) + "a" + r + "," + r + " 0 0 1 " + r + "," + r +
+           "v" + (h - 2 * r) + "a" + r + "," + r + " 0 0 1 " + (-r) + "," + r + "h" + (-(w - r)) + "Z";
+  }
+  function roundedTop(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h);
+    if (h <= 0.5) return "M" + x + "," + y + "h" + w + "v0.5h" + (-w) + "Z";
+    return "M" + x + "," + (y + h) + "v" + (-(h - r)) + "a" + r + "," + r + " 0 0 1 " + r + "," + (-r) +
+           "h" + (w - 2 * r) + "a" + r + "," + r + " 0 0 1 " + r + "," + r + "v" + (h - r) + "Z";
+  }
+
+  /* ---------- 1. onsets by year ---------- */
+  (function () {
+    var d = D.onsets, W = 720, H = 250, L = 40, R = 16, T = 18, B = 34;
+    var s = svg("c-onsets", W, H);
+    var iw = W - L - R, ih = H - T - B;
+    var max = 360, bw = iw / d.length;
+    [0, 90, 180, 270, 360].forEach(function (v) {
+      var y = T + ih - (v / max) * ih;
+      s.appendChild(el("line", { x1: L, y1: y, x2: W - R, y2: y, "class": "grid-line" }));
+      s.appendChild(el("text", { x: L - 8, y: y + 4, "class": "ax-label", "text-anchor": "end" }, v));
+    });
+    d.forEach(function (r, i) {
+      var h = (r.n / max) * ih, x = L + i * bw + bw * 0.18, w = bw * 0.64;
+      var y = T + ih - h;
+      var isTrough = r.year === 2024;
+      var p = el("path", {
+        d: roundedTop(x, y, w, Math.max(h, 0.5), 4),
+        fill: isTrough ? "var(--caution)" : "var(--accent)",
+        opacity: r.n === 0 ? 0.25 : 1
+      });
+      bind(p, "<b>" + r.year + "</b><br>" + r.n + " records still active");
+      s.appendChild(p);
+      if (i % 2 === 0 || isTrough) {
+        s.appendChild(el("text", { x: x + w / 2, y: H - B + 16, "class": "ax-label", "text-anchor": "middle" }, r.year));
+      }
+    });
+    // annotation on the 2024 trough
+    var ai = d.findIndex(function (r) { return r.year === 2024; });
+    var ax = L + ai * bw + bw / 2;
+    s.appendChild(el("line", { x1: ax, y1: T + ih - 24, x2: ax, y2: T + 26, "class": "ref-line" }));
+    var t = el("text", { x: ax - 6, y: T + 18, "class": "mark-label", "text-anchor": "end", fill: "var(--caution)" }, "2024: resolved, then purged");
+    s.appendChild(t);
+    s.appendChild(el("line", { x1: L, y1: T + ih, x2: W - R, y2: T + ih, "class": "axis-line" }));
+    table("t-onsets", ["Year", "Records"], d.map(function (r) { return [r.year, r.n]; }));
+  })();
+
+  /* ---------- 2. shortage rate by form ---------- */
+  (function () {
+    var d = D.by_form, W = 720, H = 250, L = 108, R = 54, T = 12, B = 30;
+    var s = svg("c-form", W, H);
+    var iw = W - L - R, ih = H - T - B, max = 8;
+    var bh = ih / d.length;
+    [0, 2, 4, 6, 8].forEach(function (v) {
+      var x = L + (v / max) * iw;
+      s.appendChild(el("line", { x1: x, y1: T, x2: x, y2: T + ih, "class": "grid-line" }));
+      s.appendChild(el("text", { x: x, y: H - B + 18, "class": "ax-label", "text-anchor": "middle" }, v + "%"));
+    });
+    d.forEach(function (r, i) {
+      var y = T + i * bh + bh * 0.2, h = bh * 0.6;
+      var w = (r.rate / max) * iw;
+      var acc = r.form === "Injectable";
+      var p = el("path", {
+        d: rounded(L, y, Math.max(w, 1), h, 4),
+        fill: acc ? "var(--accent)" : "var(--muted)",
+        opacity: acc ? 1 : 0.55
+      });
+      bind(p, "<b>" + r.form + "</b><br>" + r.k + " of " + r.n + " markets<br>" + r.rate + "%");
+      s.appendChild(p);
+      s.appendChild(el("text", { x: L - 10, y: y + h / 2 + 4, "class": "cat-label", "text-anchor": "end" }, r.form));
+      s.appendChild(el("text", {
+        x: L + Math.max(w, 1) + 8, y: y + h / 2 + 4, "class": "mark-label",
+        fill: acc ? "var(--accent-d)" : "var(--ink-2)"
+      }, r.rate.toFixed(2) + "%"));
+    });
+    s.appendChild(el("line", { x1: L, y1: T, x2: L, y2: T + ih, "class": "axis-line" }));
+    table("t-form", ["Dosage form", "Markets", "In shortage", "Rate"],
+      d.map(function (r) { return [r.form, r.n, r.k, r.rate + "%"]; }));
+  })();
+
+  /* ---------- shared: log-scale OR plot ---------- */
+  function orPlot(id, rows, opts) {
+    var W = 720, L = opts.left, R = 62, T = 16, B = 34;
+    var gapAfter = opts.gapAfter == null ? -1 : opts.gapAfter;
+    var gapSize = opts.gapSize || 0;
+    // vertical centre of row i, allowing for a labelled break part-way down
+    function rowY(i) {
+      return T + i * opts.rowH + opts.rowH / 2 + (i > gapAfter ? gapSize : 0);
+    }
+    var plotH = rows.length * opts.rowH + (gapAfter >= 0 ? gapSize : 0);
+    var H = T + B + plotH;
+    var s = svg(id, W, H);
+    var iw = W - L - R;
+    var lo = opts.min, hi = opts.max;
+    function X(v) { return L + (Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)) * iw; }
+    opts.ticks.forEach(function (v) {
+      var x = X(v);
+      s.appendChild(el("line", { x1: x, y1: T, x2: x, y2: T + plotH, "class": "grid-line" }));
+      s.appendChild(el("text", { x: x, y: H - B + 20, "class": "ax-label", "text-anchor": "middle" }, v));
+    });
+    var x1 = X(1);
+    s.appendChild(el("line", { x1: x1, y1: T - 2, x2: x1, y2: T + plotH + 2, "class": "ref-line" }));
+    s.appendChild(el("text", { x: x1, y: H - B + 20, "class": "ax-label", "text-anchor": "middle", fill: "var(--ink-2)" }, "1"));
+
+    rows.forEach(function (r, i) {
+      var y = rowY(i);
+      var sig = r.p < 0.05;
+      var col = r.or < 1 ? "var(--accent-d)" : "var(--accent)";
+      if (!sig) col = "var(--muted)";
+      s.appendChild(el("line", {
+        x1: X(r.lo), y1: y, x2: X(r.hi), y2: y,
+        stroke: col, "stroke-width": 2, "stroke-linecap": "round",
+        opacity: sig ? 0.85 : 0.6
+      }));
+      [r.lo, r.hi].forEach(function (v) {
+        s.appendChild(el("line", { x1: X(v), y1: y - 4, x2: X(v), y2: y + 4, stroke: col, "stroke-width": 2, opacity: sig ? 0.85 : 0.6 }));
+      });
+      var c = el("circle", { cx: X(r.or), cy: y, r: 5.5, fill: col, stroke: "var(--surface)", "stroke-width": 2 });
+      bind(c, "<b>" + (r.term || r.spec || r.label) + "</b><br>OR " + r.or.toFixed(2) +
+        "  [" + r.lo.toFixed(2) + ", " + r.hi.toFixed(2) + "]<br>p = " +
+        (r.p < 0.0001 ? "<0.0001" : r.p.toFixed(4)));
+      s.appendChild(c);
+      s.appendChild(el("text", { x: L - 12, y: y + 4, "class": "cat-label", "text-anchor": "end" }, r.term || r.spec || r.label));
+      s.appendChild(el("text", { x: W - R + 8, y: y + 4, "class": "mark-label", fill: sig ? "var(--ink-2)" : "var(--muted)" }, r.or.toFixed(2)));
+    });
+    if (gapAfter >= 0 && opts.gapLabel) {
+      var gy = T + (gapAfter + 1) * opts.rowH + gapSize / 2;
+      s.appendChild(el("line", { x1: 12, y1: gy - 8, x2: W - 12, y2: gy - 8, stroke: "var(--rule)", "stroke-width": 1 }));
+      s.appendChild(el("text", { x: 12, y: gy + 8, "class": "ax-label", fill: "var(--ink-2)" }, opts.gapLabel));
+    }
+    return s;
+  }
+
+  /* ---------- 3. sign flip ---------- */
+  (function () {
+    orPlot("c-flip", D.sign_flip, { left: 132, rowH: 40, min: 0.2, max: 3, ticks: [0.25, 0.5, 2, 3] });
+    table("t-flip", ["Specification", "OR", "95% CI", "p"],
+      D.sign_flip.map(function (r) {
+        return [r.spec, r.or.toFixed(2), r.lo.toFixed(2) + "–" + r.hi.toFixed(2),
+                r.p < 0.0001 ? "<0.0001" : r.p.toFixed(4)];
+      }));
+  })();
+
+  /* ---------- 4. forest + concentration ---------- */
+  (function () {
+    var rows = D.forest.concat(D.concentration.map(function (c) {
+      return { term: c.label, or: c.or, lo: c.lo, hi: c.hi, p: c.p };
+    }));
+    orPlot("c-forest", rows, {
+      left: 224, rowH: 38, min: 0.2, max: 24, ticks: [0.25, 0.5, 2, 5, 10, 20],
+      gapAfter: D.forest.length - 1, gapSize: 40,
+      gapLabel: "concentration, reparametrised — the same effect under two size measures"
+    });
+    table("t-forest", ["Term", "OR", "95% CI", "p"],
+      rows.map(function (r) {
+        return [r.term, r.or.toFixed(2), r.lo.toFixed(2) + "–" + r.hi.toFixed(2),
+                r.p < 0.0001 ? "<0.0001" : r.p.toFixed(4)];
+      }));
+  })();
+
+  /* ---------- 5. duration dumbbell ---------- */
+  (function () {
+    var d = D.duration, W = 720, H = 190, L = 92, R = 96, T = 26, B = 40;
+    var s = svg("c-dur", W, H);
+    var iw = W - L - R, max = 6.5;
+    function X(v) { return L + (v / max) * iw; }
+    [0, 1, 2, 3, 4, 5, 6].forEach(function (v) {
+      var x = X(v);
+      s.appendChild(el("line", { x1: x, y1: T - 6, x2: x, y2: H - B + 4, "class": "grid-line" }));
+      s.appendChild(el("text", { x: x, y: H - B + 22, "class": "ax-label", "text-anchor": "middle" }, v));
+    });
+    s.appendChild(el("text", { x: L + iw / 2, y: H - 6, "class": "ax-label", "text-anchor": "middle" }, "years"));
+    var rows = [
+      { lab: "Mean", a: d.naive_mean, b: d.corr_mean },
+      { lab: "Median", a: d.naive_median, b: d.corr_median }
+    ];
+    rows.forEach(function (r, i) {
+      var y = T + 22 + i * 54;
+      s.appendChild(el("line", { x1: X(r.b), y1: y, x2: X(r.a), y2: y, stroke: "var(--accent-w)", "stroke-width": 3, "stroke-linecap": "round" }));
+      var c2 = el("circle", { cx: X(r.a), cy: y, r: 7, fill: "var(--accent-w)", stroke: "var(--surface)", "stroke-width": 2 });
+      bind(c2, "<b>Naive " + r.lab.toLowerCase() + "</b><br>" + r.a.toFixed(2) + " y — biased upward by length-biased sampling");
+      var c1 = el("circle", { cx: X(r.b), cy: y, r: 7, fill: "var(--accent-d)", stroke: "var(--surface)", "stroke-width": 2 });
+      bind(c1, "<b>Corrected " + r.lab.toLowerCase() + "</b><br>" + r.b.toFixed(2) + " y — E[T] = 1 / E[1/A]");
+      s.appendChild(c2); s.appendChild(c1);
+      s.appendChild(el("text", { x: L - 12, y: y + 4, "class": "cat-label", "text-anchor": "end" }, r.lab));
+      s.appendChild(el("text", { x: X(r.b) - 12, y: y + 4, "class": "mark-label", "text-anchor": "end", fill: "var(--accent-d)" }, r.b.toFixed(2)));
+      s.appendChild(el("text", { x: X(r.a) + 12, y: y + 4, "class": "mark-label", fill: "var(--ink-2)" }, r.a.toFixed(2)));
+    });
+    s.appendChild(el("circle", { cx: L + 4, cy: T - 10, r: 5, fill: "var(--accent-d)" }));
+    s.appendChild(el("text", { x: L + 14, y: T - 6, "class": "ax-label", fill: "var(--ink-2)" }, "length-bias corrected"));
+    s.appendChild(el("circle", { cx: L + 186, cy: T - 10, r: 5, fill: "var(--accent-w)" }));
+    s.appendChild(el("text", { x: L + 196, y: T - 6, "class": "ax-label", fill: "var(--ink-2)" }, "naive elapsed (censored)"));
+    table("t-dur", ["Statistic", "Naive", "Corrected", "Ratio"], [
+      ["Mean", d.naive_mean + " y", d.corr_mean + " y", (d.naive_mean / d.corr_mean).toFixed(2) + "×"],
+      ["Median", d.naive_median + " y", d.corr_median + " y", (d.naive_median / d.corr_median).toFixed(2) + "×"]
+    ]);
+  })();
+
+  /* ---------- 6. reasons ---------- */
+  (function () {
+    var d = D.reasons, W = 720, L = 210, R = 54, T = 10, B = 28;
+    var H = T + B + d.length * 27;
+    var s = svg("c-reason", W, H);
+    var iw = W - L - R, max = 36;
+    [0, 10, 20, 30].forEach(function (v) {
+      var x = L + (v / max) * iw;
+      s.appendChild(el("line", { x1: x, y1: T, x2: x, y2: T + d.length * 27, "class": "grid-line" }));
+      s.appendChild(el("text", { x: x, y: H - B + 18, "class": "ax-label", "text-anchor": "middle" }, v + "%"));
+    });
+    d.forEach(function (r, i) {
+      var y = T + i * 27 + 5, h = 17, w = (r.pct / max) * iw;
+      var isOther = r.reason === "Other";
+      var p = el("path", {
+        d: rounded(L, y, Math.max(w, 1), h, 4),
+        fill: isOther ? "var(--muted)" : "var(--accent)",
+        opacity: isOther ? 0.45 : 0.85
+      });
+      bind(p, "<b>" + r.reason + "</b><br>" + r.pct + "% of coded records");
+      s.appendChild(p);
+      s.appendChild(el("text", { x: L - 10, y: y + 13, "class": "cat-label", "text-anchor": "end" }, r.reason));
+      s.appendChild(el("text", { x: L + Math.max(w, 1) + 8, y: y + 13, "class": "mark-label" }, r.pct + "%"));
+    });
+    s.appendChild(el("line", { x1: L, y1: T, x2: L, y2: T + d.length * 27, "class": "axis-line" }));
+    table("t-reason", ["Reason", "Share"], d.map(function (r) { return [r.reason, r.pct + "%"]; }));
+  })();
+})();
+</script>

@@ -1,0 +1,263 @@
+{
+ "by_form": [
+  {
+   "form": "Injectable",
+   "n": 619,
+   "k": 47,
+   "rate": 7.59
+  },
+  {
+   "form": "Inhalation",
+   "n": 81,
+   "k": 2,
+   "rate": 2.47
+  },
+  {
+   "form": "Oral Liquid",
+   "n": 103,
+   "k": 2,
+   "rate": 1.94
+  },
+  {
+   "form": "Oral Solid",
+   "n": 984,
+   "k": 9,
+   "rate": 0.91
+  },
+  {
+   "form": "Other Liquid",
+   "n": 125,
+   "k": 1,
+   "rate": 0.8
+  },
+  {
+   "form": "Topical",
+   "n": 150,
+   "k": 1,
+   "rate": 0.67
+  },
+  {
+   "form": "Ophthalmic",
+   "n": 84,
+   "k": 0,
+   "rate": 0.0
+  }
+ ],
+ "sign_flip": [
+  {
+   "or": 1.8956529858055813,
+   "lo": 1.513107744684577,
+   "hi": 2.3749136538473783,
+   "p": 2.676578778378557e-08,
+   "spec": "no controls"
+  },
+  {
+   "or": 0.5892218345626685,
+   "lo": 0.37954336506144615,
+   "hi": 0.9147370295069964,
+   "p": 0.01841879622771577,
+   "spec": "+ market size"
+  },
+  {
+   "or": 0.4031067568830003,
+   "lo": 0.22939252725288017,
+   "hi": 0.7083711897275419,
+   "p": 0.0015851058899231895,
+   "spec": "+ age"
+  },
+  {
+   "or": 0.4079828991204953,
+   "lo": 0.23266747318547343,
+   "hi": 0.7153988638630066,
+   "p": 0.0017553704663384516,
+   "spec": "+ generic"
+  },
+  {
+   "or": 0.41045106949505533,
+   "lo": 0.2346494778979088,
+   "hi": 0.7179648638422824,
+   "p": 0.0018002520940532485,
+   "spec": "+ drug-class FE"
+  }
+ ],
+ "forest": [
+  {
+   "term": "Sterile injectable",
+   "or": 9.876743465959139,
+   "lo": 4.6934739358939845,
+   "hi": 20.784191587033032,
+   "p": 1.6085692542386289e-09
+  },
+  {
+   "term": "Supplier count (log)",
+   "or": 0.41045106949505533,
+   "lo": 0.2346494778979088,
+   "hi": 0.7179648638422824,
+   "p": 0.0018002520940532485
+  },
+  {
+   "term": "Market size, listings (log)",
+   "or": 3.115286178802546,
+   "lo": 1.9760307020310925,
+   "hi": 4.911364973156911,
+   "p": 9.96396456066174e-07
+  },
+  {
+   "term": "Years since first approval (log)",
+   "or": 2.688380409972588,
+   "lo": 1.5351334452019305,
+   "hi": 4.707987602845623,
+   "p": 0.0005417101478334114
+  },
+  {
+   "term": "Generic-only market",
+   "or": 0.8338598402515824,
+   "lo": 0.4550168565477547,
+   "hi": 1.5281241193125323,
+   "p": 0.5566032078840769
+  }
+ ],
+ "n_markets": 2149,
+ "n_events": 62,
+ "concentration": [
+  {
+   "label": "Current listings per supplier",
+   "or": 2.45108312665981,
+   "lo": 1.397821621633837,
+   "hi": 4.297979370768519,
+   "p": 0.0017553704663386676
+  },
+  {
+   "label": "Products ever approved per sponsor",
+   "or": 1.2040989779372235,
+   "lo": 0.7239733823312142,
+   "hi": 2.002634881410827,
+   "p": 0.47426461502638884
+  }
+ ],
+ "duration": {
+  "n": 62,
+  "naive_mean": 5.64,
+  "naive_median": 4.61,
+  "corr_mean": 2.55,
+  "corr_median": 1.57,
+  "by_form": [
+   {
+    "form": "Injectable",
+    "n": 47,
+    "median": 6.37
+   },
+   {
+    "form": "Oral Solid",
+    "n": 9,
+    "median": 3.59
+   }
+  ],
+  "hist": [
+   7,
+   19,
+   12,
+   6,
+   13,
+   5
+  ]
+ },
+ "onsets": [
+  {
+   "year": 2012,
+   "n": 80
+  },
+  {
+   "year": 2013,
+   "n": 0
+  },
+  {
+   "year": 2014,
+   "n": 0
+  },
+  {
+   "year": 2015,
+   "n": 6
+  },
+  {
+   "year": 2016,
+   "n": 27
+  },
+  {
+   "year": 2017,
+   "n": 104
+  },
+  {
+   "year": 2018,
+   "n": 181
+  },
+  {
+   "year": 2019,
+   "n": 20
+  },
+  {
+   "year": 2020,
+   "n": 143
+  },
+  {
+   "year": 2021,
+   "n": 52
+  },
+  {
+   "year": 2022,
+   "n": 172
+  },
+  {
+   "year": 2023,
+   "n": 352
+  },
+  {
+   "year": 2024,
+   "n": 11
+  },
+  {
+   "year": 2025,
+   "n": 17
+  },
+  {
+   "year": 2026,
+   "n": 12
+  }
+ ],
+ "resolved_records": 10,
+ "total_records": 1628,
+ "reasons": [
+  {
+   "reason": "Other",
+   "pct": 33.7
+  },
+  {
+   "reason": "Demand increase for the drug",
+   "pct": 23.8
+  },
+  {
+   "reason": "Discontinuation of the manufacture of the drug",
+   "pct": 16.9
+  },
+  {
+   "reason": "Shortage of an active ingredient",
+   "pct": 13.5
+  },
+  {
+   "reason": "Delay in shipping of the drug",
+   "pct": 5.7
+  },
+  {
+   "reason": "Requirements related to complying with good manufacturing practices",
+   "pct": 4.8
+  },
+  {
+   "reason": "Shortage of an inactive ingredient component",
+   "pct": 1.0
+  },
+  {
+   "reason": "Regulatory delay",
+   "pct": 0.7
+  }
+ ]
+}
