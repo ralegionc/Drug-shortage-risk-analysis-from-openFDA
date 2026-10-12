@@ -16,6 +16,8 @@ endpoints, captured 2026-08-22.
 
 ## The data problem, stated plainly
 
+> The raw inputs are not in this repository. [DATA.md](DATA.md) records exactly which files were used, with sizes and fingerprints, and how to re-fetch them.
+
 `/drug/shortages.json` returns current state. Of 1,628 records, **10** carry status
 `Resolved`, eight of which duplicate a single hydrocortisone entry. The file is a
 **prevalent cohort**: it samples shortages in progress, not shortages that occurred.
